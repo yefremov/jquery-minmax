@@ -1,0 +1,20 @@
+/*jslint node: true */
+'use strict';
+
+module.exports = {
+  'build': {
+    'run': function ( d, v ) {
+      var q = v.require( 'q' );
+
+      q.call(function () {
+        v.rm( 'jquery.minmax.min.js' );
+        return v.spawn( 'jshint', ['jquery.minmax.js'] );
+      }).then(function ( valid ) {
+        v.spawn( 'uglifyjs', ['-o', 'jquery.minmax.min.js', 'jquery.minmax.js'] );
+        return valid;
+      }).then(function ( valid ) {
+        d.resolve( valid );
+      }, d.reject );
+    }
+  }
+};
